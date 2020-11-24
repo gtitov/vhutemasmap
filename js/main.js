@@ -11,7 +11,7 @@ var map = new mapboxgl.Map({
 map.addControl(new mapboxgl.NavigationControl({ showCompass: false }));  // zoom controls
 map.addControl(new mapboxgl.AttributionControl({
     compact: true
-    }));
+}));
 
 
 
@@ -28,7 +28,7 @@ map.on('load', function () {
         img.onload = () => map.addImage(name, img)
         img.src = url
     }
-    addSVG('tree-15', 'icons/flag.svg')
+    addSVG('flag', 'icons/flag.svg')
     addSVG('globe', 'icons/globe.svg')
     addSVG('placeholder', 'icons/placeholder.svg')
 
@@ -40,7 +40,7 @@ map.on('load', function () {
     });
 
     // add points layer with popups on map
-    mapPoints = function (layerId, source, sourceLayer, filterValue) {
+    mapPoints = function (layerId, layerName, source, sourceLayer, iconName) {
         // draw points
         map.addLayer({
             'id': layerId,
@@ -51,8 +51,9 @@ map.on('load', function () {
                 'icon-image': ['get', 'icon'],
                 'icon-size': 1,
                 'icon-allow-overlap': true,
+                'visibility': 'visible'  // for legend work
             },
-            'filter': ['==', 'icon', filterValue]
+            'filter': ['==', 'icon', iconName]
         });
 
         // change the cursor to a pointer when the mouse is over the layer
@@ -69,19 +70,58 @@ map.on('load', function () {
         map.on('click', layerId, function (e) {
             var clicked = e.features[0].properties
 
-            document.getElementById("title").innerHTML = clicked.title
-            document.getElementById("address").innerHTML = clicked.address
-            document.getElementById("image").src = clicked.image
-            document.getElementById("caption").innerHTML = clicked.caption
-            document.getElementById("description").innerHTML = clicked.description
-            document.getElementById("audio").innerHTML = clicked.audio
-            
+            document.getElementById('title').innerHTML = clicked.title
+            document.getElementById('address').innerHTML = clicked.address
+            document.getElementById('image').src = clicked.image
+            document.getElementById('caption').innerHTML = clicked.caption
+            document.getElementById('description').innerHTML = clicked.description
+            document.getElementById('audio').innerHTML = clicked.audio
+
             modal.open()
         });
+
+        // constuct legend
+        var image = document.createElement('img');
+        // НАВЕРНОЕ, ПРИДЁТСЯ МЕНЯТЬ, КОГДА СТАНЕТ ПОНЯТНО, КАК НАЗЫВАЮТСЯ ИКОНКИ
+        image.src = `icons/${iconName}.svg`;
+        image.alt = 'icon';
+        image.width = '24';
+        image.height = '24';
+
+        var icon = document.createElement('span');
+        icon.className = 'secondary-content';
+        icon.appendChild(image);
+
+        var layer = document.createElement('a');
+        layer.href = '#';
+        layer.value = layerId;
+        layer.className = 'collection-item active';
+        layer.textContent = layerName;
+        layer.appendChild(icon);
+
+        layer.onclick = function (e) {
+            var clickedLayer = this.value;
+            e.preventDefault();
+            e.stopPropagation();
+            var visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+            // toggle layer visibility by changing the layout object's visibility property
+            if (visibility === 'visible') {
+                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                this.className = 'collection-item';
+            } else {
+                this.className = 'collection-item active';
+                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+            }
+        };
+
+        var layers = document.getElementById('legend');
+        layers.appendChild(layer);
     }
 
-    mapPoints('points-data1', 'places-points', 'test', 'tree-15')
-    mapPoints('points-data2', 'places-points', 'test', 'park-15')
+    mapPoints('points-data1', 'Слой 1', 'places-points', 'test', 'flag')
+    mapPoints('points-data2', 'Слой 2', 'places-points', 'test', 'globe')
+    mapPoints('points-data3', 'Слой 3', 'places-points', 'test', 'placeholder')
 });
 
 

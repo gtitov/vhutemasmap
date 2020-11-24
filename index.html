@@ -24,24 +24,34 @@
     <!-- Materialize -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <!-- Materialize icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body>
-    <a href="https://vhutemas.mosmuseum.ru/map" class="btn-floating btn-small waves-effect waves-light white black-text" style="position: absolute; top: 5px; left: 5px;"><b>?</b></a>
+    <div style="position: absolute; top: 10px; left: 10px;">
+        <!-- Legend -->
+        <div id="legend" class="collection" style="z-index: 10; width: 150px">
+        </div>
+        <!-- About button -->
+        <a id="about" href="https://vhutemas.mosmuseum.ru/map" class="btn-floating waves-effect waves-light white"><i class="black-text material-icons">school</i></a>
+    </div>
+    
+
+
 
     <!-- Map -->
     <div id="map" style="width: 100%; height: 100vh;"></div>
 
     <!-- Modal -->
     <div class="container">
-        <div id="modal1" class=" modal bottom-sheet"
-            style="width: inherit; max-height: 90%; height: 90%; left: inherit; right: inherit">
+        <div id="modal1" class=" modal bottom-sheet" style="width: inherit; max-height: 90%; height: 90%; left: inherit; right: inherit">
             <div class="modal-content">
                 <h4 id="title">Modal Header</h4>
                 <p id="address">Москва, улица Юбилейная, дом 9</p>
-                <img id="image" class="responsive-img" style="width:100%">
-                <span id="caption" class="grey-text"></span>
-                <p id="description"></p>
+                <img id="image" class="responsive-img">
+                <p id="caption" class="grey-text"></p>
+                <p id="description" class="flow-text"></p>
                 <div id="audio"></div>
             </div>
         </div>
