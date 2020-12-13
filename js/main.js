@@ -23,7 +23,7 @@ map.on('load', function () {
     // load points
     map.addSource('poi', {
         type: 'vector',
-        url: 'mapbox://ghermant.cki31gmg33abi2arpmvfufpyv-8rm1a'
+        url: 'mapbox://mosmuseum.9vr042qb'
     });
 
     // load icons
@@ -44,15 +44,20 @@ map.on('load', function () {
     var placeIcon = addSVG('place', 'icons/place.svg')
 
     // activate modals
-    var elem = document.querySelector('#modal1');
-    var modal = M.Modal.init(elem, {
+    var modalElement = document.querySelector('#modal1');
+    var modal = M.Modal.init(modalElement, {
         // get modal back to start after scroll when closing to open it at start next time 
         onCloseStart: (element) => element.scrollTop = 0
     });
 
+    // activate sidenav
+    var sidenavElement = document.querySelectorAll('.sidenav');
+    var sidenav = M.Sidenav.init(sidenavElement, {});
+    
+
     // add points layer with popups on map
-    mapPoints = function (layerId, layerName, source, sourceLayer, icon) {
-        // draw points
+    mapPoints = function (layerId, layerName, layerFeatureName, source, sourceLayer, icon) {
+        // Draw points
         map.addLayer({
             'id': layerId,
             'source': source,
@@ -68,6 +73,8 @@ map.on('load', function () {
             'filter': ['==', 'icon', icon.id]
         });
 
+
+        // Points interactivity
         // change the cursor to a pointer when the mouse is over the layer
         map.on('mouseenter', layerId, function () {
             map.getCanvas().style.cursor = 'pointer';
@@ -82,10 +89,11 @@ map.on('load', function () {
         map.on('click', layerId, function (e) {
             var clicked = e.features[0].properties
 
-            document.getElementById('title').innerHTML = clicked.title
-            document.getElementById('address').innerHTML = clicked.address
-            document.getElementById('caption').innerHTML = clicked.caption
-            document.getElementById('description').innerHTML = clicked.description
+            document.getElementById('title').textContent = clicked.title
+            document.getElementById('address').textContent = clicked.address
+            document.getElementById('layer-feature-name').textContent = clicked.done ? 'Реализованный архитектурный проект студентов ВХУТЕМАСа' : layerFeatureName
+            document.getElementById('caption').textContent = clicked.caption
+            document.getElementById('description').textContent = clicked.description
             document.getElementById('audios').innerHTML = clicked.audio_embed
 
             addImage = function(name, divToAppend) {
@@ -96,7 +104,7 @@ map.on('load', function () {
                 divToAppend.appendChild(image)
             }
             imagesDiv = document.getElementById('images')
-            while(imagesDiv.firstChild){
+            while(imagesDiv.firstChild) {
                 imagesDiv.removeChild(imagesDiv.firstChild);
             }
             if(clicked.image) {
@@ -108,9 +116,9 @@ map.on('load', function () {
             modal.open()
         });
 
-        // constuct legend
-        var image = icon.image
-        // НАВЕРНОЕ, ПРИДЁТСЯ МЕНЯТЬ, КОГДА СТАНЕТ ПОНЯТНО, КАК НАЗЫВАЮТСЯ ИКОНКИ
+
+        // Constuct legend
+        var image = icon.image;
         image.alt = 'icon';
         image.width = '24';
         image.height = '24';
@@ -144,11 +152,66 @@ map.on('load', function () {
 
         var layers = document.getElementById('legend');
         layers.appendChild(layer);
+
+
+        // Construct list
+        var layerTitle = document.createElement('a')
+        layerTitle.className = 'subheader'
+        layerTitle.textContent = layerName
+
+        var layerTitleLi = document.createElement('li')
+        layerTitleLi.id = `${layerId}-list-title`
+        layerTitleLi.appendChild(layerTitle)
+        var layerFeaturesLi = document.createElement('div')
+        layerFeaturesLi.id = `${layerId}-list-features`
+
+        var layerList = document.createElement('div')
+        layerList.id = `${layerId}-list`
+        layerList.appendChild(layerTitleLi)
+        layerList.appendChild(layerFeaturesLi)
+
+        var locationsList = document.getElementById('locations-list')
+        locationsList.appendChild(layerList)
+
+        map.on('render', function() {
+
+            var layerFeaturesList = document.getElementById(`${layerId}-list-features`)
+            while(layerFeaturesList.firstChild){
+                layerFeaturesList.removeChild(layerFeaturesList.firstChild);
+            }
+
+            var renderedFeatures = map.queryRenderedFeatures({ layers: [layerId] })
+                .map(feature => {
+                    var featureLite = {title: feature.properties.title}
+                    var featureTitle = document.createElement('a')
+                    featureTitle.id = `link-${feature.properties.id}`
+                    featureTitle.href = '#'
+                    featureTitle.className = 'waves-effect a-in-list'
+                    featureTitle.textContent = featureLite.title
+                    featureTitle.addEventListener('click', function(event) {
+                        // In this case [clickedFeature] == clickedFeature[0]
+                        var [clickedFeature] = map.queryRenderedFeatures({
+                            layers: [layerId],
+                            filter: ['==', 'id', parseInt(this.id.substring(5))]
+                        })
+                        map.flyTo({
+                            center: clickedFeature.geometry.coordinates,
+                            zoom: 15
+                        });
+                    })
+                    featureTitleLi = document.createElement('li')
+                    featureTitleLi.appendChild(featureTitle)
+
+                    layerFeaturesList.appendChild(featureTitleLi)
+                })
+            // console.log(renderedFeatures)
+        })
+        
     }
 
-    mapPoints('projects', 'Проекты', 'poi', 'vhutemas1', projectIcon)
-    mapPoints('people', 'Адреса', 'poi', 'vhutemas1', peopleIcon)
-    mapPoints('places', 'Актуальные адреса', 'poi', 'vhutemas1', placeIcon)
+    mapPoints('projects', 'Проекты', 'Архитектурный проект студентов ВХУТЕМАСа', 'poi', 'vhutemas_mapbox-7neq34', projectIcon)    
+    mapPoints('people', 'Адреса', 'Адрес', 'poi', 'vhutemas_mapbox-7neq34', peopleIcon)
+    mapPoints('places', 'Актуальные адреса', 'Актуальный адрес', 'poi', 'vhutemas_mapbox-7neq34', placeIcon)
 });
 
 
