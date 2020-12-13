@@ -26,36 +26,71 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <!-- Materialize icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        #main {
+            width: 75%;
+            position: relative;
+        }
+        #locations-list {
+            width: 25%;
+        }
+        @media only screen and (max-width : 992px) {
+            #main {
+                width: 100%;
+            }
+            #locations-list {
+                width: 300px;
+            }
+        }
+        .a-in-list {
+            min-height: 48px;
+            height: auto !important;
+            line-height: 24px !important;
+            padding-top: 0.6em !important;
+            padding-bottom: 0.8em !important;
+        }
+    </style>
 </head>
 
 <body>
-    <div style="position: absolute; top: 10px; left: 10px;">
-        <!-- Legend -->
-        <div id="legend" class="collection" style="z-index: 10; width: 150px">
-        </div>
-        <!-- About button -->
-        <a id="about" href="https://vhutemas.mosmuseum.ru/map" class="btn-floating waves-effect waves-light white"><i class="grey-text text-darken-2 material-icons">school</i></a>
-    </div>
+    <ul id="locations-list" class="sidenav sidenav-fixed"></ul>
     
-
-
-
-    <!-- Map -->
-    <div id="map" style="width: 100%; height: 100vh;"></div>
-
-    <!-- Modal -->
-    <div class="container">
-        <div id="modal1" class="modal bottom-sheet" style="width: inherit; max-height: 90%; height: 90%; left: inherit; right: inherit">
-            <div class="modal-content">
-                <h4 id="title"></h4>
-                <p id="address"></p>
-                <div id="images" style="max-width: 600px;"></div>
-                <p id="caption" class="grey-text"></p>
-                <p id="description" class="flow-text"></p>
-                <div id="audios"></div>
+    <div id="main" class="right">
+        <div style="position: absolute; top: 10px; left: 10px;">
+            <!-- Legend -->
+            <div id="legend" class="collection" style="z-index: 10; width: 150px"></div>
+            <!-- Locations list trigger -->
+            <a href="#" data-target="locations-list" style="text-transform: none;" class="sidenav-trigger waves-effect waves-light teal lighten-3 hide-on-large-only btn">Список</a>
+            <!-- About button -->
+            <a id="about" href="https://vhutemas.mosmuseum.ru/map" class="btn-floating waves-effect waves-light right white"><i class="grey-text text-darken-2 material-icons">school</i></a>
+        </div>
+        
+    
+    
+    
+        <!-- Map -->
+        <div id="map" style="width: 100%; height: 100vh;"></div>
+    
+        <!-- Modal -->
+        <div class="container">
+            <div id="modal1" class="modal bottom-sheet" style="max-height: 90%; height: 90%; width: inherit; margin: inherit">
+                <div class="modal-content">
+                    <h4 id="title"></h4>
+                    <p id="address"></p>
+                    <p id="layer-feature-name" class="grey-text"></p>
+                    <div id="images" style="max-width: 600px;"></div>
+                    <p id="caption" class="grey-text"></p>
+                    <p id="description" class="flow-text"></p>
+                    <div id="audios"></div>
+                </div>
             </div>
         </div>
+            
+        
+                
+            
     </div>
+
 
 
     <script src="js/main.js"></script>
