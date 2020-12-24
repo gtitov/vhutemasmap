@@ -209,9 +209,9 @@ map.on('load', function () {
         
     }
 
-    mapPoints('projects', 'Проекты', 'Архитектурный проект студентов ВХУТЕМАСа', 'poi', 'vhutemas_mapbox-7neq34', projectIcon)    
+    mapPoints('projects', 'Проекты', 'Проект', 'poi', 'vhutemas_mapbox-7neq34', projectIcon)    
     mapPoints('addresses', 'Адреса', 'Адрес', 'poi', 'vhutemas_mapbox-7neq34', peopleIcon)
-    mapPoints('events', 'События', 'Актуальный адрес', 'poi', 'vhutemas_mapbox-7neq34', placeIcon)
+    mapPoints('events', 'События', 'Событие', 'poi', 'vhutemas_mapbox-7neq34', placeIcon)
 });
 
 
