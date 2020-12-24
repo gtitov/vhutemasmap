@@ -42,12 +42,19 @@
                 width: 300px;
             }
         }
+
         .a-in-list {
             min-height: 48px;
             height: auto !important;
             line-height: 24px !important;
             padding-top: 0.6em !important;
             padding-bottom: 0.8em !important;
+        }
+
+        #images img {
+            margin-right: 5px;
+            margin-top: 5px;
+            /* max-width: 600px; в этом сейчас смысла нет, все изображения и так маленькие*/
         }
     </style>
 </head>
@@ -78,7 +85,7 @@
                     <h4 id="title"></h4>
                     <p id="address"></p>
                     <p id="layer-feature-name" class="grey-text"></p>
-                    <div id="images" style="max-width: 600px;"></div>
+                    <div id="images" style="display: flex; flex-wrap: wrap;"></div>
                     <p id="caption" class="grey-text"></p>
                     <p id="description" class="flow-text"></p>
                     <div id="audios"></div>
